@@ -11,6 +11,13 @@ public class AddrMan {
 	private static byte[][] sAddrs;
 	private static int sCount;
 
+	/**
+	 * 导入升序的Base16的地址列表。
+	 * 文件格式为一行一条地址记录，一条地址40个Base16的字符，读取时遇到空行结束读取。
+	 * @param addrsFilePath 存放地址的文件路径。
+	 * @param count 文件中地址条数。
+	 * @throws IOException
+	 */
 	public static final void init(String addrsFilePath, int count) throws IOException {
 		sAddrs = new byte[count][20];
 		BufferedReader reader = new BufferedReader(new FileReader(new File(addrsFilePath)));
@@ -23,6 +30,12 @@ public class AddrMan {
 		reader.close();
 	}
 
+	/**
+	 * 检查地址是否在地址缓存中。
+	 * 采用二分查找，非常快。
+	 * @param tAddr 地址，20个byte的数组。
+	 * @return 地址在缓存中存在则返回true，否则返回false；
+	 */
 	public static final boolean contain(byte[] tAddr) {
 		int low = 0;
 		int high = sCount - 1;
