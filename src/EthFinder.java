@@ -49,11 +49,12 @@ public class EthFinder {
 
 		final long start = System.currentTimeMillis();
 		for (int i = 0; i < threads; i++) {
+			final int dbIndex = i + 1;
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						startByMysql(host, maxPerThread, minSame);
+						startByMysql(host, dbIndex, maxPerThread, minSame);
 					} catch (SQLException e) {
 						e.printStackTrace();
 						new IllegalStateException(e.getMessage());
@@ -64,10 +65,10 @@ public class EthFinder {
 		}
 	}
 
-	private static void startByMysql(String host, long max, int minSame) throws SQLException {
+	private static void startByMysql(String host, int dbIndex, long max, int minSame) throws SQLException {
 		// 初始化mysql连接
-        Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + "/eth?user=root&password=123456&useSSL=false");
-        PreparedStatement ps = conn.prepareStatement("select addr from eth.account where addr = ?");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + "/eth_" + dbIndex + "?user=root&password=123456&useSSL=false");
+        PreparedStatement ps = conn.prepareStatement("select addr from eth_" + dbIndex + ".account where addr = ?");
 
         // 初始化密钥算法
 	    SecureRandom secureRandom = new SecureRandom();
